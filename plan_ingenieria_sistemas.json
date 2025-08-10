@@ -1,0 +1,449 @@
+[
+  {
+    "anio": 1,
+    "cuatrimestre": 1,
+    "materias": [
+      {
+        "codigo": "01",
+        "nombre": "INTRODUCCIÓN A LOS ALGORITMOS Y LA PROGRAMACIÓN",
+        "correlativas": [],
+        "carga": 80
+      },
+      {
+        "codigo": "02",
+        "nombre": "ARQUITECTURA DE COMPUTADORAS I",
+        "correlativas": [],
+        "carga": 80
+      },
+      {
+        "codigo": "03",
+        "nombre": "ÁLGEBRA Y GEOMETRÍA ANALÍTICA",
+        "correlativas": [],
+        "carga": 80
+      },
+      {
+        "codigo": "04",
+        "nombre": "PROBLEMÁTICA DEL MUNDO ACTUAL",
+        "correlativas": [],
+        "carga": 64
+      },
+      {
+        "codigo": "05",
+        "nombre": "INGLÉS I",
+        "correlativas": [],
+        "carga": 32
+      }
+    ]
+  },
+  {
+    "anio": 1,
+    "cuatrimestre": 2,
+    "materias": [
+      {
+        "codigo": "06",
+        "nombre": "ARQUITECTURA DE COMPUTADORAS II",
+        "correlativas": [
+          "02"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "07",
+        "nombre": "CÁLCULO INFINITESIMAL I",
+        "correlativas": [
+          "03"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "08",
+        "nombre": "HISTORIA DE LA CIENCIA Y DE LA TÉCNICA",
+        "correlativas": [],
+        "carga": 64
+      },
+      {
+        "codigo": "09",
+        "nombre": "INGLÉS II",
+        "correlativas": [
+          "05"
+        ],
+        "carga": 32
+      },
+      {
+        "codigo": "10",
+        "nombre": "PROGRAMACIÓN Y ESTRUCTURAS DE DATOS",
+        "correlativas": [
+          "01"
+        ],
+        "carga": 80
+      }
+    ]
+  },
+  {
+    "anio": 2,
+    "cuatrimestre": 1,
+    "materias": [
+      {
+        "codigo": "11",
+        "nombre": "PROGRAMACIÓN ORIENTADA A OBJETOS",
+        "correlativas": [
+          "10"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "12",
+        "nombre": "ANÁLISIS Y DISEÑO DE SISTEMAS I",
+        "correlativas": [],
+        "carga": 80
+      },
+      {
+        "codigo": "13",
+        "nombre": "CÁLCULO INFINITESIMAL II",
+        "correlativas": [
+          "07"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "14",
+        "nombre": "INGLÉS III",
+        "correlativas": [
+          "09"
+        ],
+        "carga": 32
+      },
+      {
+        "codigo": "15",
+        "nombre": "SISTEMAS OPERATIVOS",
+        "correlativas": [
+          "06"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "16",
+        "nombre": "ANÁLISIS DE PROCESOS ADMINISTRATIVOS",
+        "correlativas": [],
+        "carga": 64
+      }
+    ]
+  },
+  {
+    "anio": 2,
+    "cuatrimestre": 2,
+    "materias": [
+      {
+        "codigo": "17",
+        "nombre": "ANÁLISIS Y DISEÑO DE SISTEMAS II",
+        "correlativas": [
+          "12"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "18",
+        "nombre": "FÍSICA I",
+        "correlativas": [
+          "07"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "19",
+        "nombre": "PROBABILIDAD Y ESTADÍSTICA",
+        "correlativas": [
+          "13"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "20",
+        "nombre": "INGLÉS IV",
+        "correlativas": [
+          "14"
+        ],
+        "carga": 32
+      },
+      {
+        "codigo": "21",
+        "nombre": "INGENIERÍA DE REQUERIMIENTOS",
+        "correlativas": [
+          "12"
+        ],
+        "carga": 48
+      },
+      {
+        "codigo": "22",
+        "nombre": "DESARROLLO Y ARQUITECTURA DE SOFTWARE",
+        "correlativas": [
+          "11"
+        ],
+        "carga": 80
+      }
+    ]
+  },
+  {
+    "anio": 3,
+    "cuatrimestre": 1,
+    "materias": [
+      {
+        "codigo": "23",
+        "nombre": "ANÁLISIS Y DISEÑO DE SISTEMAS III",
+        "correlativas": [
+          "17"
+        ],
+        "carga": 48
+      },
+      {
+        "codigo": "24",
+        "nombre": "BASE DE DATOS",
+        "correlativas": [
+          "12"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "25",
+        "nombre": "TECNOLOGÍA DE LAS COMUNICACIONES I",
+        "correlativas": [],
+        "carga": 80
+      },
+      {
+        "codigo": "26",
+        "nombre": "FÍSICA II",
+        "correlativas": [
+          "18"
+        ],
+        "carga": 64
+      },
+      {
+        "codigo": "27",
+        "nombre": "INGENIERÍA DE SOFTWARE",
+        "correlativas": [
+          "17",
+          "21",
+          "22"
+        ],
+        "carga": 80
+      }
+    ]
+  },
+  {
+    "anio": 3,
+    "cuatrimestre": 2,
+    "materias": [
+      {
+        "codigo": "28",
+        "nombre": "EXPERIENCIAS FORMATIVAS OBLIGATORIAS DE CARÁCTER ELECTIVO",
+        "correlativas": [],
+        "carga": 80
+      },
+      {
+        "codigo": "29",
+        "nombre": "TECNOLOGÍA DE LAS COMUNICACIONES II",
+        "correlativas": [
+          "25"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "30",
+        "nombre": "MATEMÁTICA DISCRETA Y AUTÓMATAS",
+        "correlativas": [],
+        "carga": 64
+      },
+      {
+        "codigo": "31",
+        "nombre": "BASES DE DATOS APLICADA",
+        "correlativas": [
+          "24"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "32",
+        "nombre": "TRABAJO DE DIPLOMA",
+        "correlativas": [
+          "23",
+          "24",
+          "27"
+        ],
+        "carga": 80
+      }
+    ]
+  },
+  {
+    "anio": 4,
+    "cuatrimestre": 1,
+    "materias": [
+      {
+        "codigo": "33",
+        "nombre": "METODOLOGÍAS ÁGILES",
+        "correlativas": [
+          "17"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "34",
+        "nombre": "ORGANIZACIÓN Y GESTIÓN EMPRESARIA",
+        "correlativas": [],
+        "carga": 64
+      },
+      {
+        "codigo": "35",
+        "nombre": "BASES DE DATOS AVANZADA",
+        "correlativas": [
+          "24"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "36",
+        "nombre": "DESARROLLO Y ARQUITECTURAS WEB",
+        "correlativas": [
+          "22"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "37",
+        "nombre": "EXPERIENCIAS FORMATIVAS OBLIGATORIAS DE CARÁCTER ELECTIVO",
+        "correlativas": [],
+        "carga": 48
+      }
+    ]
+  },
+  {
+    "anio": 4,
+    "cuatrimestre": 2,
+    "materias": [
+      {
+        "codigo": "38",
+        "nombre": "ADMINISTRACIÓN DE PROYECTOS",
+        "correlativas": [],
+        "carga": 64
+      },
+      {
+        "codigo": "39",
+        "nombre": "PLANIFICACIÓN ESTRATÉGICA",
+        "correlativas": [
+          "34"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "40",
+        "nombre": "INTELIGENCIA ARTIFICIAL",
+        "correlativas": [
+          "22"
+        ],
+        "carga": 64
+      },
+      {
+        "codigo": "41",
+        "nombre": "METODOLOGÍAS Y DESARROLLOS WEB",
+        "correlativas": [
+          "36"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "42",
+        "nombre": "ELECTROMAGNETISMO I",
+        "correlativas": [
+          "26"
+        ],
+        "carga": 64
+      }
+    ]
+  },
+  {
+    "anio": 5,
+    "cuatrimestre": 1,
+    "materias": [
+      {
+        "codigo": "43",
+        "nombre": "SISTEMA DE HARDWARE",
+        "correlativas": [
+          "18"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "44",
+        "nombre": "MODELIZACIÓN NUMÉRICA",
+        "correlativas": [
+          "19"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "45",
+        "nombre": "ELECTROMAGNETISMO II",
+        "correlativas": [
+          "42"
+        ],
+        "carga": 64
+      },
+      {
+        "codigo": "46",
+        "nombre": "PRÁCTICA PROFESIONAL SUPERVISADA",
+        "correlativas": [
+          "32"
+        ],
+        "carga": 200
+      },
+      {
+        "codigo": "47",
+        "nombre": "SEMINARIO DE TRABAJO FINAL DE INGENIERÍA",
+        "correlativas": [
+          "38",
+          "39",
+          "41"
+        ],
+        "carga": 80
+      }
+    ]
+  },
+  {
+    "anio": 5,
+    "cuatrimestre": 2,
+    "materias": [
+      {
+        "codigo": "48",
+        "nombre": "AUDITORIA DE SISTEMAS",
+        "correlativas": [
+          "16"
+        ],
+        "carga": 64
+      },
+      {
+        "codigo": "49",
+        "nombre": "REDES Y TELEPROCESAMIENTO",
+        "correlativas": [
+          "29"
+        ],
+        "carga": 80
+      },
+      {
+        "codigo": "50",
+        "nombre": "SEGURIDAD INFORMÁTICA",
+        "correlativas": [
+          "29",
+          "43"
+        ],
+        "carga": 64
+      },
+      {
+        "codigo": "51",
+        "nombre": "TRABAJO FINAL DE INGENIERÍA",
+        "correlativas": [
+          "47"
+        ],
+        "carga": 80
+      }
+    ]
+  }
+]
