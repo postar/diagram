@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "npm run build && npx wrangler pages deploy ./dist --project-name=diagram-estudios --compatibility-date=2025-09-16"
+    "deploy": "npm run build && npx wrangler pages deploy ./dist --project-name=diagram-estudios --compatibility-date=2025-09-16 --create"
   },
   "dependencies": {
     "react": "^19.1.1",
