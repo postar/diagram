@@ -1,0 +1,495 @@
+{
+  "nombre_plan": "CONTADOR PÚBLICO   - PLAN: C8-22",
+  "plan": [
+    {
+      "anio": 1,
+      "cuatrimestre": 1,
+      "materias": [
+        {
+          "codigo": "01",
+          "nombre": "ADMINISTRACIÓN I",
+          "correlativas": [],
+          "carga": 64
+        },
+        {
+          "codigo": "02",
+          "nombre": "COMERCIALIZACIÓN",
+          "correlativas": [],
+          "carga": 64
+        },
+        {
+          "codigo": "03",
+          "nombre": "CONTABILIDAD I",
+          "correlativas": [],
+          "carga": 64
+        },
+        {
+          "codigo": "04",
+          "nombre": "HISTORIA SOCIAL Y ECONÓMICA",
+          "correlativas": [],
+          "carga": 64
+        },
+        {
+          "codigo": "05",
+          "nombre": "INGLÉS I",
+          "correlativas": [],
+          "carga": 32
+        }
+      ]
+    },
+    {
+      "anio": 1,
+      "cuatrimestre": 2,
+      "materias": [
+        {
+          "codigo": "06",
+          "nombre": "COMERCIO INTERNACIONAL",
+          "correlativas": [],
+          "carga": 48
+        },
+        {
+          "codigo": "07",
+          "nombre": "PRINCIPIOS DE ECONOMÍA",
+          "correlativas": [],
+          "carga": 64
+        },
+        {
+          "codigo": "08",
+          "nombre": "MATEMÁTICA I",
+          "correlativas": [],
+          "carga": 64
+        },
+        {
+          "codigo": "09",
+          "nombre": "ADMINISTRACIÓN II",
+          "correlativas": [
+            "01"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "10",
+          "nombre": "INFORMÁTICA",
+          "correlativas": [],
+          "carga": 48
+        },
+        {
+          "codigo": "11",
+          "nombre": "INGLÉS II",
+          "correlativas": [
+            "05"
+          ],
+          "carga": 32
+        }
+      ]
+    },
+    {
+      "anio": 2,
+      "cuatrimestre": 1,
+      "materias": [
+        {
+          "codigo": "12",
+          "nombre": "MATEMÁTICA II",
+          "correlativas": [
+            "08"
+          ],
+          "carga": 80
+        },
+        {
+          "codigo": "13",
+          "nombre": "MICROECONOMÍA",
+          "correlativas": [
+            "07"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "14",
+          "nombre": "CONTABILIDAD II",
+          "correlativas": [
+            "03"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "15",
+          "nombre": "TEORÍA DE LAS ORGANIZACIONES",
+          "correlativas": [
+            "01"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "16",
+          "nombre": "DERECHO CONSTITUCIONAL Y ADMINISTRATIVO",
+          "correlativas": [],
+          "carga": 64
+        }
+      ]
+    },
+    {
+      "anio": 2,
+      "cuatrimestre": 2,
+      "materias": [
+        {
+          "codigo": "17",
+          "nombre": "PSICOLOGÍA APLICADA",
+          "correlativas": [],
+          "carga": 48
+        },
+        {
+          "codigo": "18",
+          "nombre": "SISTEMAS DE INFORMACIÓN",
+          "correlativas": [
+            "15"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "19",
+          "nombre": "MACROECONOMÍA",
+          "correlativas": [
+            "07"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "20",
+          "nombre": "INFORMÁTICA APLICADA",
+          "correlativas": [
+            "10"
+          ],
+          "carga": 48
+        },
+        {
+          "codigo": "21",
+          "nombre": "PROBLEMÁTICA DEL MUNDO ACTUAL",
+          "correlativas": [
+            "04"
+          ],
+          "carga": 48
+        }
+      ]
+    },
+    {
+      "anio": 3,
+      "cuatrimestre": 1,
+      "materias": [
+        {
+          "codigo": "22",
+          "nombre": "MATEMÁTICA FINANCIERA",
+          "correlativas": [
+            "12"
+          ],
+          "carga": 80
+        },
+        {
+          "codigo": "23",
+          "nombre": "DERECHO CIVIL Y COMERCIAL",
+          "correlativas": [
+            "16"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "24",
+          "nombre": "ESTADÍSTICA",
+          "correlativas": [
+            "12"
+          ],
+          "carga": 80
+        },
+        {
+          "codigo": "25",
+          "nombre": "COSTOS I",
+          "correlativas": [
+            "13",
+            "14"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "26",
+          "nombre": "ESTRUCTURA Y POLÍTICA ECONÓMICA ARGENTINA",
+          "correlativas": [],
+          "carga": 64
+        }
+      ]
+    },
+    {
+      "anio": 3,
+      "cuatrimestre": 2,
+      "materias": [
+        {
+          "codigo": "27",
+          "nombre": "ADMINISTRACIÓN FINANCIERA",
+          "correlativas": [
+            "22",
+            "25"
+          ],
+          "carga": 80
+        },
+        {
+          "codigo": "28",
+          "nombre": "SOCIEDADES",
+          "correlativas": [
+            "23"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "29",
+          "nombre": "ANÁLISIS DE ESTADOS CONTABLES",
+          "correlativas": [
+            "14"
+          ],
+          "carga": 80
+        },
+        {
+          "codigo": "30",
+          "nombre": "SEMINARIO EN ADMINISTRACIÓN CONTABLE: TALLER DE INTEGRACIÓN",
+          "correlativas": [
+            "18",
+            "25"
+          ],
+          "carga": 80
+        },
+        {
+          "codigo": "31",
+          "nombre": "COSTOS II",
+          "correlativas": [
+            "25"
+          ],
+          "carga": 64
+        }
+      ]
+    },
+    {
+      "anio": 4,
+      "cuatrimestre": 1,
+      "materias": [
+        {
+          "codigo": "32",
+          "nombre": "DERECHO LABORAL Y PREVISIONAL",
+          "correlativas": [
+            "23"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "33",
+          "nombre": "EVALUACIÓN DE PROYECTOS",
+          "correlativas": [
+            "02",
+            "27"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "34",
+          "nombre": "AUDITORÍA",
+          "correlativas": [
+            "29"
+          ],
+          "carga": 80
+        },
+        {
+          "codigo": "35",
+          "nombre": "FINANZAS PÚBLICAS Y DERECHO TRIBUTARIO",
+          "correlativas": [
+            "23"
+          ],
+          "carga": 80
+        },
+        {
+          "codigo": "36",
+          "nombre": "METODOLOGÍA DE LA INVESTIGACIÓN",
+          "correlativas": [
+            "24"
+          ],
+          "carga": 64
+        }
+      ]
+    },
+    {
+      "anio": 4,
+      "cuatrimestre": 2,
+      "materias": [
+        {
+          "codigo": "37",
+          "nombre": "CONCURSOS Y QUIEBRAS",
+          "correlativas": [
+            "28",
+            "32"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "38",
+          "nombre": "IMPUESTO A LAS RENTAS Y PATRIMONIO",
+          "correlativas": [
+            "35"
+          ],
+          "carga": 80
+        },
+        {
+          "codigo": "39",
+          "nombre": "IMPUESTO SOBRE LOS CONSUMOS Y PROCEDIMIENTO TRIBUTARIO",
+          "correlativas": [
+            "35"
+          ],
+          "carga": 80
+        },
+        {
+          "codigo": "40",
+          "nombre": "TÉCNICAS CUANTITATIVAS",
+          "correlativas": [
+            "24"
+          ],
+          "carga": 48
+        },
+        {
+          "codigo": "41",
+          "nombre": "TALLER DE TRABAJO FINAL",
+          "correlativas": [
+            "36"
+          ],
+          "carga": 48
+        }
+      ]
+    },
+    {
+      "anio": 5,
+      "cuatrimestre": 1,
+      "materias": [
+        {
+          "codigo": "42",
+          "nombre": "PRÁCTICA PROFESIONAL IMPOSITIVA",
+          "correlativas": [
+            "38",
+            "39"
+          ],
+          "carga": 80
+        },
+        {
+          "codigo": "43",
+          "nombre": "PRÁCTICA PROFESIONAL ADMINISTRATIVO-CONTABLE",
+          "correlativas": [
+            "27",
+            "29",
+            "30"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "44",
+          "nombre": "PRÁCTICA PROFESIONAL JURÍDICA-CONTABLE",
+          "correlativas": [
+            "37"
+          ],
+          "carga": 64
+        },
+        {
+          "codigo": "45",
+          "nombre": "PRÁCTICA PROFESIONAL SUPERVISADA",
+          "correlativas": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "07",
+            "08",
+            "09",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36"
+          ],
+          "carga": 100
+        },
+        {
+          "codigo": "46",
+          "nombre": "TRABAJO FINAL",
+          "correlativas": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "07",
+            "08",
+            "09",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44"
+          ],
+          "carga": 48
+        },
+        {
+          "codigo": "47",
+          "nombre": "EXPERIENCIAS FORMATIVAS OBLIGATORIAS DE CARÁCTER ELECTIVO",
+          "correlativas": [],
+          "carga": 80
+        }
+      ]
+    }
+  ]
+}
