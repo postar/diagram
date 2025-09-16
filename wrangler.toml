@@ -1,10 +1,5 @@
 name = "diagrama-plan-estudios"
 compatibility_date = "2025-09-16"
 
-# Configuración para sitio estático
-[assets]
-directory = "./dist"
-binding = "ASSETS"
-
-[vars]
-ENVIRONMENT = "production"
+# Configuración para Cloudflare Pages
+pages_build_output_dir = "./dist"
