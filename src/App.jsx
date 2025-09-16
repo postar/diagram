@@ -1,275 +1,417 @@
-import React, { useEffect, useState } from "react";
-import ReactFlow, { Background, Controls, MiniMap } from "reactflow";
-import "reactflow/dist/style.css";
-import './App.css'
-
-const STATUS = ["pendiente", "cursada", "aprobada"];
-
-// Colores
-const COLOR_VIOLETA = "#b39ddb"; // habilitada para cursar y rendir
-const COLOR_VIOLETA_CLARO = "#e1bee7"; // habilitada solo para cursar
-const COLOR_AMARILLO = "#ffe066"; // cursada
-const COLOR_VERDE = "#8bc34a"; // aprobada
-const COLOR_DEFAULT = "#fff";
-
-function getStatusColor(status, enabled, habilitadaSoloCursada) {
-  if (habilitadaSoloCursada) return COLOR_VIOLETA_CLARO;
-  if (enabled) return COLOR_VIOLETA;
-  switch (status) {
-    case "cursada": return COLOR_AMARILLO;
-    case "aprobada": return COLOR_VERDE;
-    default: return COLOR_DEFAULT;
-  }
-}
-
-const STORAGE_KEY = "estado_materias_plan";
-
-function useColorScheme() {
-  const [isDark, setIsDark] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDark(mq.matches);
-    const handler = e => setIsDark(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
-  return isDark;
-}
+import React, { useState, useEffect } from 'react';
+import './App.css';
 
 function App() {
-  const [plan, setPlan] = useState([]);
-  const [nodes, setNodes] = useState([]);
-  const [edges, setEdges] = useState([]);
-  const [nodeStatus, setNodeStatus] = useState({});
-  const isDark = useColorScheme();
+  const [planes, setPlanes] = useState([]);
+  const [planSeleccionado, setPlanSeleccionado] = useState(null);
+  const [dataPlan, setDataPlan] = useState(null);
+  const [progreso, setProgreso] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [temaOscuro, setTemaOscuro] = useState(true); // Modo oscuro activado por defecto
 
-  // Cargar estado desde localStorage al iniciar
+  // Cargar planes disponibles
   useEffect(() => {
-    fetch("/plan_ingenieria_sistemas.json")
-      .then(res => res.json())
-      .then(data => {
-        setPlan(data);
-        // Agrupar por año y cuatrimestre
-        const agrupado = {};
-        data.forEach(bloque => {
-          if (!agrupado[bloque.anio]) agrupado[bloque.anio] = {};
-          agrupado[bloque.anio][bloque.cuatrimestre] = bloque.materias;
-        });
-        // Inicializar estados
-        const initialStatus = {};
-        data.forEach(bloque => {
-          bloque.materias.forEach(mat => {
-            initialStatus[mat.codigo] = "pendiente";
-          });
-        });
-        // Restaurar desde localStorage si existe
-        const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          setNodeStatus({ ...initialStatus, ...parsed });
-        } else {
-          setNodeStatus(initialStatus);
+    const cargarPlanes = async () => {
+      try {
+        setLoading(true);
+        const planesDisponibles = [
+          {
+            archivo: 'contador_público____plan_c822.json',
+            nombre: 'Contador Público',
+            codigo: 'C822'
+          },
+          {
+            archivo: 'ingeniería_en_sistemas_informáticos____plan_t123.json',
+            nombre: 'Ingeniería en Sistemas Informáticos',
+            codigo: 'T123'
+          }
+        ];
+
+        // Verificar cuáles archivos existen realmente
+        const planesExistentes = [];
+        for (const plan of planesDisponibles) {
+          try {
+            const response = await fetch(`/planes/${plan.archivo}`);
+            if (response.ok) {
+              planesExistentes.push(plan);
+            }
+          } catch (error) {
+            console.warn(`No se pudo cargar el plan: ${plan.archivo}`);
+          }
         }
-      });
+
+        setPlanes(planesExistentes);
+      } catch (error) {
+        console.error('Error cargando planes:', error);
+        setPlanes([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarPlanes();
   }, []);
 
-  // Guardar estado en localStorage cada vez que cambie
+  // Manejar tema oscuro
   useEffect(() => {
-    if (Object.keys(nodeStatus).length > 0) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(nodeStatus));
+    const temaGuardado = localStorage.getItem('temaOscuro');
+    if (temaGuardado !== null) {
+      setTemaOscuro(JSON.parse(temaGuardado));
     }
-  }, [nodeStatus]);
+  }, []);
 
   useEffect(() => {
-    if (!plan.length) return;
-    // Agrupar por año y cuatrimestre
-    const agrupado = {};
-    plan.forEach(bloque => {
-      if (!agrupado[bloque.anio]) agrupado[bloque.anio] = {};
-      agrupado[bloque.anio][bloque.cuatrimestre] = bloque.materias;
-    });
-    const nodes = [];
-    const edges = [];
-  // Responsive spacing
-  const isMobile = window.innerWidth < 700;
-  const xSpacing = isMobile ? 160 : 300;
-  const ySpacing = isMobile ? 100 : 120;
-    Object.entries(agrupado).forEach(([anio, cuatObj], anioIdx) => {
-      Object.entries(cuatObj).forEach(([cuatrimestre, materias], cuatIdx) => {
-        // Algoritmo para ubicar correlativas debajo de sus predecesoras
-        // 1. Crear un mapa de materias por código
-        const matMap = {};
-        materias.forEach(m => { matMap[m.codigo] = m; });
-        // 2. Calcular columna para cada materia
-        const colMap = {};
-        let colCounter = 0;
-        // Materias sin correlativas: asignar columna nueva
-        materias.forEach(m => {
-          if (!m.correlativas.length) {
-            colMap[m.codigo] = colCounter++;
-          }
-        });
-        // Materias con correlativas: asignar columna igual a la correlativa principal (primera)
-        materias.forEach(m => {
-          if (m.correlativas.length) {
-            const principal = m.correlativas[0];
-            colMap[m.codigo] = colMap[principal] !== undefined ? colMap[principal] : colCounter++;
-          }
-        });
-        // 3. Ordenar materias por columna y correlatividad
-        const ordenadas = [...materias].sort((a, b) => {
-          if (colMap[a.codigo] !== colMap[b.codigo]) return colMap[a.codigo] - colMap[b.codigo];
-          // Si están en la misma columna, correlativas debajo
-          if (a.correlativas.includes(b.codigo)) return 1;
-          if (b.correlativas.includes(a.codigo)) return -1;
-          return 0;
-        });
-        // 4. Ubicar cada materia en la grilla evitando superposición vertical
-        const colYMap = {};
-        ordenadas.forEach((mat, matIdx) => {
-          const id = mat.codigo;
-          let enabled = false;
-          let habilitadaSoloCursada = false;
-          if (mat.correlativas.length > 0) {
-            // Si todas correlativas están "cursada" o "aprobada", se puede cursar
-            const todasCursadaOAprobada = mat.correlativas.every(corr => ["cursada", "aprobada"].includes(nodeStatus[corr]));
-            // Si todas correlativas están "aprobada", se puede rendir final
-            const todasAprobada = mat.correlativas.every(corr => nodeStatus[corr] === "aprobada");
-            if (todasAprobada) enabled = true;
-            else if (todasCursadaOAprobada) habilitadaSoloCursada = true;
-          } else {
-            enabled = nodeStatus[id] === "pendiente";
-          }
-          // Determinar opciones permitidas
-          let allowedStatus = ["pendiente"];
-          if (enabled) allowedStatus = ["pendiente", "cursada", "aprobada"];
-          else if (habilitadaSoloCursada) allowedStatus = ["pendiente", "cursada"];
-          // Calcular posición vertical para evitar superposición en la columna
-          const col = colMap[id];
-          if (!colYMap[col]) colYMap[col] = 0;
-          const yPos = 80 + ySpacing * (anioIdx * 2 + (cuatIdx)) + colYMap[col];
-          colYMap[col] += (isMobile ? 220 : 260); // sumar espacio vertical para cada materia en la columna
-          nodes.push({
-            id,
-            data: {
-              label: (
-                <div>
-                  <strong>{mat.nombre}</strong>
-                  <br />
-                  <span style={{ fontSize: 12 }}>Año: {anio} | Cuat: {cuatrimestre}</span>
-                  <br />
-                  <select
-                    value={nodeStatus[id]}
-                    onChange={e => {
-                      const nuevo = e.target.value;
-                      if (!allowedStatus.includes(nuevo)) return;
-                      const newStatus = { ...nodeStatus, [id]: nuevo };
-                      setNodeStatus(newStatus);
-                    }}
-                  >
-                    {allowedStatus.map(s => <option key={s} value={s}>{s}</option>)}
-                  </select>
-                </div>
-              ),
-              status: nodeStatus[id],
-            },
-            position: {
-              x: 80 + xSpacing * col,
-              y: yPos,
-            },
-            style: {
-              background: getStatusColor(nodeStatus[id], enabled && nodeStatus[id] === "pendiente", habilitadaSoloCursada && nodeStatus[id] === "pendiente"),
-              border: "1px solid #888",
-              borderRadius: 8,
-              padding: isMobile ? 6 : 10,
-              minWidth: isMobile ? 120 : 240,
-              maxWidth: isMobile ? 180 : 320,
-              fontSize: isMobile ? 12 : 15,
-              whiteSpace: 'normal',
-              wordBreak: 'break-word',
-            },
-          });
-          // Correlatividades
-          mat.correlativas.forEach(corr => {
-            edges.push({
-              id: `${corr}->${id}`,
-              source: corr,
-              target: id,
-              animated: true,
-              style: { stroke: "#1976d2" },
-            });
-          });
-        });
-      });
-    });
-    setNodes(nodes);
-    setEdges(edges);
-  }, [plan, nodeStatus]);
+    document.body.className = temaOscuro ? 'tema-oscuro' : 'tema-claro';
+    localStorage.setItem('temaOscuro', JSON.stringify(temaOscuro));
+  }, [temaOscuro]);
 
-  // Leyenda adaptada a tema
-  const legendBg = isDark ? '#222' : '#f5f5f5';
-  const legendColor = isDark ? '#eee' : '#222';
-  const borderColor = isDark ? '#555' : '#888';
+  // Función para cambiar tema
+  const toggleTema = () => {
+    setTemaOscuro(!temaOscuro);
+  };
 
-  const [showLegend, setShowLegend] = useState(false);
-  return (
-  <div style={{ width: "100vw", height: "100vh", position: "relative", minHeight: '100svh', overflow: 'auto' }}>
-      <h2>Diagrama de Plan de Estudios</h2>
-      <ReactFlow nodes={nodes} edges={edges} fitView>
-        <Background />
-        <MiniMap />
-        <Controls />
-      </ReactFlow>
-      {/* Botón para mostrar/ocultar leyenda */}
-      <div style={{ position: "absolute", left: 24, bottom: 24, zIndex: 20 }}>
-        <button
-          onClick={() => setShowLegend(v => !v)}
-          style={{
-            background: legendBg,
-            color: legendColor,
-            border: `1px solid ${borderColor}`,
-            borderRadius: "50%",
-            width: 48,
-            height: 48,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontSize: 28,
-            fontWeight: "bold",
-            cursor: "pointer",
-            boxShadow: isDark ? "0 2px 8px #111" : "0 2px 8px #ccc"
-          }}
-          aria-label={showLegend ? "Ocultar leyenda" : "Mostrar leyenda"}
-          title={showLegend ? "Ocultar leyenda" : "Mostrar leyenda"}
-        >
-          <span style={{fontFamily: 'Arial, Helvetica, sans-serif'}}>I</span>
-        </button>
-        {/* Leyenda visible solo si showLegend es true */}
-        {showLegend && (
-          <div
-            style={{
-              marginTop: 8,
-              padding: 12,
-              background: legendBg,
-              color: legendColor,
-              borderRadius: 8,
-              maxWidth: 340,
-              border: `1px solid ${borderColor}`,
-              textAlign: "left",
-              boxShadow: isDark ? "0 2px 8px #111" : "0 2px 8px #ccc"
-            }}
-          >
-            <strong style={{ display: "block", marginBottom: 8 }}>Leyenda de colores:</strong>
-            <ul style={{ listStyle: 'none', paddingLeft: 0, margin: 0 }}>
-              <li style={{ marginBottom: 4 }}><span style={{ background: COLOR_VERDE, border: `1px solid ${borderColor}`, borderRadius: 4, padding: '2px 12px', marginRight: 8, display: 'inline-block' }}></span> Aprobada (puede rendir final)</li>
-              <li style={{ marginBottom: 4 }}><span style={{ background: COLOR_AMARILLO, border: `1px solid ${borderColor}`, borderRadius: 4, padding: '2px 12px', marginRight: 8, display: 'inline-block' }}></span> Cursada</li>
-              <li style={{ marginBottom: 4 }}><span style={{ background: COLOR_VIOLETA, border: `1px solid ${borderColor}`, borderRadius: 4, padding: '2px 12px', marginRight: 8, display: 'inline-block' }}></span> Habilitada para cursar y rendir final</li>
-              <li style={{ marginBottom: 4 }}><span style={{ background: COLOR_VIOLETA_CLARO, border: `1px solid ${borderColor}`, borderRadius: 4, padding: '2px 12px', marginRight: 8, display: 'inline-block' }}></span> Habilitada solo para cursar (no puede rendir final)</li>
-              <li><span style={{ background: COLOR_DEFAULT, border: `1px solid ${borderColor}`, borderRadius: 4, padding: '2px 12px', marginRight: 8, display: 'inline-block' }}></span> Pendiente</li>
-            </ul>
-          </div>
-        )}
+  // Cargar progreso guardado
+  useEffect(() => {
+    if (planSeleccionado) {
+      const progresoGuardado = localStorage.getItem(`progreso_${planSeleccionado.codigo}`);
+      if (progresoGuardado) {
+        try {
+          setProgreso(JSON.parse(progresoGuardado));
+        } catch (error) {
+          console.error('Error cargando progreso:', error);
+          setProgreso({});
+        }
+      } else {
+        setProgreso({});
+      }
+    }
+  }, [planSeleccionado]);
+
+  // Guardar progreso
+  useEffect(() => {
+    if (planSeleccionado && Object.keys(progreso).length > 0) {
+      localStorage.setItem(`progreso_${planSeleccionado.codigo}`, JSON.stringify(progreso));
+    }
+  }, [progreso, planSeleccionado]);
+
+  // Cargar datos del plan seleccionado
+  const cargarPlan = async (plan) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/planes/${plan.archivo}`);
+      if (!response.ok) {
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      setDataPlan(data);
+      setPlanSeleccionado(plan);
+    } catch (error) {
+      console.error('Error cargando plan:', error);
+      alert('Error cargando el plan de estudios. Por favor, intenta nuevamente.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Cambiar estado de materia
+  const cambiarEstadoMateria = (codigoMateria, nuevoEstado) => {
+    setProgreso(prev => ({
+      ...prev,
+      [codigoMateria]: nuevoEstado
+    }));
+  };
+
+  // Verificar si se pueden cursar las correlativas
+  const puedesCursar = (materia) => {
+    if (!materia.correlativas || materia.correlativas.length === 0) {
+      return true;
+    }
+
+    // Las correlativas en el JSON pueden ser códigos o nombres de materias
+    return materia.correlativas.every(correlativa => {
+      // Buscar por código exacto primero
+      let estadoCorrelativa = progreso[correlativa];
+      
+      // Si no se encuentra, buscar por nombre de materia (en caso de que las correlativas sean nombres)
+      if (!estadoCorrelativa && dataPlan?.plan) {
+        // Buscar el código de la materia por su nombre
+        for (const periodo of dataPlan.plan) {
+          const materiaCorrelativa = periodo.materias.find(m => 
+            m.nombre.toLowerCase().includes(correlativa.toLowerCase()) ||
+            correlativa.toLowerCase().includes(m.nombre.toLowerCase())
+          );
+          if (materiaCorrelativa) {
+            estadoCorrelativa = progreso[materiaCorrelativa.codigo];
+            break;
+          }
+        }
+      }
+      
+      return estadoCorrelativa === 'completada';
+    });
+  };
+
+  // Obtener color de materia según estado
+  const getColorMateria = (codigoMateria, materia) => {
+    const estado = progreso[codigoMateria] || 'sin-cursar';
+    
+    switch (estado) {
+      case 'completada':
+        return temaOscuro ? '#22c55e' : '#4caf50'; // Verde más brillante en oscuro
+      case 'cursada':
+        return temaOscuro ? '#f59e0b' : '#ff9800'; // Naranja más brillante en oscuro
+      case 'sin-cursar':
+        if (!puedesCursar(materia)) {
+          return temaOscuro ? '#a855f7' : '#e1bee7'; // Morado más visible en oscuro
+        }
+        return temaOscuro ? '#334155' : '#f5f5f5'; // Gris más oscuro en modo oscuro
+      default:
+        return temaOscuro ? '#334155' : '#f5f5f5';
+    }
+  };
+
+  // Calcular estadísticas
+  const calcularEstadisticas = () => {
+    if (!dataPlan?.plan) return { completadas: 0, cursadas: 0, total: 0 };
+    
+    // Contar el total de materias sumando las materias de todos los períodos
+    const total = dataPlan.plan.reduce((acc, periodo) => acc + periodo.materias.length, 0);
+    const completadas = Object.values(progreso).filter(estado => estado === 'completada').length;
+    const cursadas = Object.values(progreso).filter(estado => estado === 'cursada').length;
+    
+    return { completadas, cursadas, total };
+  };
+
+  // Agrupar materias por período para mostrar como grilla
+  const agruparMateriasPorPeriodo = () => {
+    if (!dataPlan?.plan) return [];
+    
+    // El JSON tiene formato: { plan: [ { anio: 1, cuatrimestre: 1, materias: [...] } ] }
+    const grilla = dataPlan.plan.map(periodo => ({
+      anio: periodo.anio,
+      cuatrimestre: `${periodo.cuatrimestre}° Cuatrimestre`,
+      materias: periodo.materias.map(materia => ({
+        codigo: materia.codigo,
+        nombre: materia.nombre,
+        correlativas: materia.correlativas || [],
+        horas: materia.carga || materia.horas || 0
+      })),
+      key: `${periodo.anio}-${periodo.cuatrimestre}`
+    }));
+    
+    // Ordenar por año y cuatrimestre
+    grilla.sort((a, b) => {
+      if (a.anio !== b.anio) {
+        return a.anio - b.anio;
+      }
+      return a.cuatrimestre.localeCompare(b.cuatrimestre);
+    });
+    
+    return grilla;
+  };
+
+  // Función para obtener información detallada de correlativas
+  const obtenerInfoCorrelativas = (correlativas) => {
+    return correlativas.map(cor => {
+      const estadoCorr = progreso[cor] || 'sin-cursar';
+      const estadoTexto = estadoCorr === 'completada' ? '✅ Completada' : 
+                         estadoCorr === 'cursada' ? '🟡 Cursada' : '❌ Pendiente';
+      return `• ${cor}: ${estadoTexto}`;
+    }).join('\n');
+  };
+
+  if (loading) {
+    return (
+      <div className="loading">
+        <div className="loading-spinner"></div>
+        <p>Cargando...</p>
       </div>
+    );
+  }
+
+  if (!planSeleccionado) {
+    return (
+      <div className="plan-selector">
+        <div className="container">
+          <div className="selector-header">
+            <div>
+              <h1>Diagrama de Plan de Estudios</h1>
+              <p>Selecciona tu plan de estudios para comenzar a trackear tu progreso</p>
+            </div>
+            <button 
+              className="btn-theme"
+              onClick={toggleTema}
+              title={temaOscuro ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
+            >
+              {temaOscuro ? '☀️' : '🌙'}
+            </button>
+          </div>
+          
+          {planes.length === 0 ? (
+            <div className="no-plans">
+              <h3>No se encontraron planes</h3>
+              <p>Asegúrate de que los archivos JSON estén en la carpeta /public/planes/</p>
+            </div>
+          ) : (
+            <div className="planes-grid">
+              {planes.map((plan) => (
+                <div 
+                  key={plan.codigo} 
+                  className="plan-card"
+                  onClick={() => cargarPlan(plan)}
+                >
+                  <h3>{plan.nombre}</h3>
+                  <p>Código: {plan.codigo}</p>
+                  <button className="btn-primary">Seleccionar Plan</button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  const estadisticas = calcularEstadisticas();
+  const grillaPlan = agruparMateriasPorPeriodo();
+
+  return (
+    <div className="app">
+      <header className="header">
+        <div className="container">
+          <div className="header-content">
+            <div className="header-left">
+              <h1>{planSeleccionado.nombre}</h1>
+              <div className="header-buttons">
+                <button 
+                  className="btn-secondary"
+                  onClick={() => {
+                    setPlanSeleccionado(null);
+                    setDataPlan(null);
+                  }}
+                >
+                  Cambiar Plan
+                </button>
+                <button 
+                  className="btn-theme"
+                  onClick={toggleTema}
+                  title={temaOscuro ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
+                >
+                  {temaOscuro ? '☀️' : '🌙'}
+                </button>
+              </div>
+            </div>
+            <div className="estadisticas">
+              <div className="stat">
+                <span className="stat-value">{estadisticas.completadas}</span>
+                <span className="stat-label">Completadas</span>
+              </div>
+              <div className="stat">
+                <span className="stat-value">{estadisticas.cursadas}</span>
+                <span className="stat-label">Cursadas</span>
+              </div>
+              <div className="stat">
+                <span className="stat-value">{estadisticas.total}</span>
+                <span className="stat-label">Total</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="main">
+        <div className="container">
+          {/* Leyenda */}
+          <div className="leyenda">
+            <div className="leyenda-item">
+              <div className="color-box" style={{backgroundColor: '#4caf50'}}></div>
+              <span>Completada</span>
+            </div>
+            <div className="leyenda-item">
+              <div className="color-box" style={{backgroundColor: '#ff9800'}}></div>
+              <span>Cursada</span>
+            </div>
+            <div className="leyenda-item">
+              <div className="color-box" style={{backgroundColor: '#e1bee7'}}></div>
+              <span>Correlativas pendientes</span>
+            </div>
+            <div className="leyenda-item">
+              <div className="color-box" style={{backgroundColor: '#f5f5f5'}}></div>
+              <span>Sin cursar</span>
+            </div>
+          </div>
+
+          {/* Plan de estudios como tabla horizontal */}
+          <div className="plan-tabla">
+            {grillaPlan.map((fila) => (
+              <div key={fila.key} className="fila-periodo">
+                <div className="etiqueta-periodo">
+                  <div className="periodo-info">
+                    <span className="anio">Año {fila.anio}</span>
+                    <span className="cuatrimestre">C{fila.cuatrimestre.charAt(0)}</span>
+                  </div>
+                </div>
+                <div className="materias-horizontal">
+                  {fila.materias.map((materia) => {
+                    const puedeTomarMateria = puedesCursar(materia);
+                    const colorMateria = getColorMateria(materia.codigo, materia);
+                    
+                    return (
+                      <div
+                        key={materia.codigo}
+                        className="materia-celda"
+                        style={{
+                          backgroundColor: colorMateria,
+                          borderColor: colorMateria !== '#f5f5f5' ? colorMateria : '#e2e8f0'
+                        }}
+                        title={`${materia.nombre} (${materia.horas}hs)${materia.correlativas?.length ? ` - Correlativas: ${materia.correlativas.join(', ')}` : ''}`}
+                      >
+                        <div className="materia-contenido">
+                          <div className="materia-header-horizontal">
+                            <span className="codigo-materia">{materia.codigo}</span>
+                            <select 
+                              className="selector-estado"
+                              value={progreso[materia.codigo] || 'sin-cursar'}
+                              onChange={(e) => cambiarEstadoMateria(materia.codigo, e.target.value)}
+                              disabled={!puedeTomarMateria && progreso[materia.codigo] !== 'completada' && progreso[materia.codigo] !== 'cursada'}
+                            >
+                              <option value="sin-cursar">Sin cursar</option>
+                              <option value="cursada">Cursada</option>
+                              <option value="completada">Completada</option>
+                            </select>
+                          </div>
+                          
+                          <div className="nombre-materia">{materia.nombre}</div>
+                          
+                          <div className="info-materia">
+                            <span className="horas">{materia.horas}hs</span>
+                            {materia.correlativas && materia.correlativas.length > 0 && (
+                              <span 
+                                className="correlativas-icon" 
+                                title={`Correlativas necesarias:\n${obtenerInfoCorrelativas(materia.correlativas)}`}
+                              >
+                                🔗
+                              </span>
+                            )}
+                            {!puedeTomarMateria && (
+                              <span 
+                                className="bloqueada"
+                                title={`No se puede cursar aún. Correlativas pendientes:\n${materia.correlativas?.filter(cor => progreso[cor] !== 'completada').map(cor => `• ${cor}`).join('\n') || 'Verificar correlativas'}`}
+                              >
+                                ⚠️
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
